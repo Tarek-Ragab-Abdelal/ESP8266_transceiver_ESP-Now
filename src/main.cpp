@@ -32,9 +32,9 @@ void OnDataRecv(uint8_t *mac, uint8_t *incomingData, uint8_t len)
 
 //$################################################################################################//
 // The mac address that data will be sent to
-uint8_t target_mac_add[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+uint8_t target_mac_add[] = {0xC4, 0x5B, 0xBE, 0x63, 0x68, 0x89};
 // The mac address of the current board
-uint8_t my_mac_add[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+uint8_t my_mac_add[] = {0x98, 0xCD, 0xAC, 0x26, 0x64, 0xF1};
 
 struct_message sen_packet;
 // Period of data transmitting
@@ -44,7 +44,7 @@ unsigned long timerDelay = 2000; // send readings timer
 // Callback function that will be executed when data is sent
 void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus)
 {
-  Serial.print("Last rec_packet Send Status: ");
+  Serial.print("Last packet Send Status: ");
   if (sendStatus == 0)
   {
     Serial.println("Delivery success");
@@ -58,7 +58,7 @@ void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus)
 void send_packet()
 {
   // Set values to be sent
-  strcpy(sen_packet.header, "This is a Header");
+  strcpy(sen_packet.header, "This is a Header - FROM: 98:CD:AC:26:64:F1");
   strcpy(sen_packet.body, "This is a test body data - to be replaced with any  data");
 
   // Send a packet via ESP-NOW
@@ -70,7 +70,7 @@ void send_packet()
 //*################################################################################################//
 void initiallize()
 {
-  if (esp_now_init() != 0)
+  if (esp_now_init() == 0)
   {
     Serial.println("ESP-Now Init Success");
   }
@@ -89,6 +89,8 @@ void setup()
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
+  Serial.print("MAC Address:\t");
+  Serial.println(WiFi.macAddress());
   // Init ESP-NOW
   initiallize();
   // Set the role of the ESP to be a receiver
